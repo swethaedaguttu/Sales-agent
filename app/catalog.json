@@ -1,0 +1,122 @@
+{
+  "company": "NexusHQ",
+  "tagline": "The all-in-one B2B operations platform",
+  "plans": [
+    {
+      "name": "Starter",
+      "price": "$49/mo",
+      "annual_price": "$39/mo billed annually",
+      "users": "Up to 5 users",
+      "features": [
+        "5 user seats",
+        "API access",
+        "Email support (48h SLA)",
+        "1 workspace",
+        "Basic analytics dashboard",
+        "5 GB storage",
+        "Community forum access",
+        "Standard integrations (Slack, Gmail)"
+      ],
+      "not_included": ["SSO", "Webhooks", "Priority support", "Audit logs", "SLA guarantee", "Custom integrations"]
+    },
+    {
+      "name": "Growth",
+      "price": "$199/mo",
+      "annual_price": "$159/mo billed annually",
+      "users": "Up to 25 users",
+      "features": [
+        "25 user seats",
+        "API access",
+        "Webhooks",
+        "Priority support (12h SLA)",
+        "3 workspaces",
+        "Advanced analytics & reporting",
+        "50 GB storage",
+        "All Starter integrations",
+        "Zapier & Make integration",
+        "Custom branding",
+        "CSV & Excel exports"
+      ],
+      "not_included": ["SSO", "Audit logs", "Dedicated SLA", "Custom integrations", "On-premise deployment"]
+    },
+    {
+      "name": "Enterprise",
+      "price": "$499/mo",
+      "annual_price": "$399/mo billed annually",
+      "users": "Unlimited users",
+      "features": [
+        "Unlimited user seats",
+        "API access",
+        "Webhooks",
+        "SSO (SAML 2.0, OIDC)",
+        "Audit logs & compliance reports",
+        "Dedicated SLA (99.99% uptime)",
+        "24/7 dedicated support",
+        "Unlimited workspaces",
+        "500 GB storage",
+        "All Growth integrations",
+        "Custom integrations (REST, GraphQL)",
+        "On-premise & private cloud deployment",
+        "Role-based access control (RBAC)",
+        "Data residency options (US, EU, APAC)",
+        "Dedicated Customer Success Manager",
+        "Security review & pen-test reports"
+      ],
+      "not_included": []
+    }
+  ],
+  "addons": [
+    {
+      "name": "Extra Storage",
+      "price": "$10/mo per 50 GB"
+    },
+    {
+      "name": "Additional Workspace",
+      "price": "$15/mo each"
+    },
+    {
+      "name": "Priority Onboarding",
+      "price": "$299 one-time"
+    },
+    {
+      "name": "Custom SLA",
+      "price": "Contact sales"
+    }
+  ],
+  "faqs": [
+    {
+      "question": "Can I switch plans anytime?",
+      "answer": "Yes, you can upgrade or downgrade your plan at any time. Upgrades take effect immediately; downgrades apply at the next billing cycle."
+    },
+    {
+      "question": "Is there a free trial?",
+      "answer": "Yes, all plans come with a 14-day free trial. No credit card required."
+    },
+    {
+      "question": "What payment methods do you accept?",
+      "answer": "We accept all major credit cards, ACH bank transfers, and wire transfers for Enterprise plans."
+    },
+    {
+      "question": "Do you offer discounts for non-profits or startups?",
+      "answer": "Yes, we offer 30% discounts for verified non-profits and early-stage startups (under $1M ARR). Contact sales@nexushq.com."
+    },
+    {
+      "question": "What does SSO include?",
+      "answer": "SSO on Enterprise supports SAML 2.0 and OIDC. Compatible with Okta, Azure AD, Google Workspace, and any SAML-compliant identity provider."
+    },
+    {
+      "question": "Where is data stored?",
+      "answer": "By default, data is stored in the US. Enterprise customers can choose EU or APAC data residency at no extra cost."
+    },
+    {
+      "question": "What is the refund policy?",
+      "answer": "We offer a 30-day money-back guarantee for Starter and Growth plans. Enterprise contracts are negotiated individually."
+    }
+  ],
+  "contact": {
+    "sales": "sales@nexushq.com",
+    "support": "support@nexushq.com",
+    "phone": "+1 (800) 555-0199",
+    "demo_url": "https://nexushq.com/demo"
+  }
+}
