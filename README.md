@@ -629,11 +629,11 @@ pytest tests/ -v
 | Health check endpoint | ✅ `/health` |
 | Environment variable documentation | ✅ `.env.example` |
 | OpenAPI docs | ✅ `/docs`, `/redoc` |
-| Persistent DB on Render/Railway | ⚠️ Use PostgreSQL (SQLite is ephemeral) |
+| Persistent DB on Render | ✅ Postgres-ready (`DATABASE_URL` + `MEMORY_BACKEND=postgres`); default SQLite is ephemeral on redeploy |
 | Live demo curl commands | ✅ Documented above |
 
 ---
 
 ## License
 
-MIT 
+This project is licensed under the MIT License.
