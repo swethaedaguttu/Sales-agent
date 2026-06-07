@@ -2,9 +2,10 @@
 
 A production-ready B2B SaaS sales assistant API with **cross-session memory**, **real tool calling**, and **self-evaluation on every response**.
 
-Built as a take-home assignment demonstrating persistent agent memory, structured evaluation, and clean API architecture — deployable to Railway in minutes.
+Built as a take-home assignment demonstrating persistent agent memory, structured evaluation, and clean API architecture — deployable to Render or Railway in minutes.
 
-> **Live URL:** `https://sales-agent-production.up.railway.app` *(replace with your own deployment — see [Railway Deployment](#railway-deployment))*
+> **Live URL:** [https://sales-agent-d1vx.onrender.com](https://sales-agent-d1vx.onrender.com)  
+> **API docs:** [https://sales-agent-d1vx.onrender.com/docs](https://sales-agent-d1vx.onrender.com/docs) · **Health:** [https://sales-agent-d1vx.onrender.com/health](https://sales-agent-d1vx.onrender.com/health)
 
 ---
 
@@ -18,7 +19,7 @@ Built as a take-home assignment demonstrating persistent agent memory, structure
 | Database | SQLite (default; Postgres-compatible via `DATABASE_URL`) |
 | Validation | Pydantic v2 |
 | LLM | **Groq** (default) · OpenAI · Anthropic Claude — swappable via `LLM_PROVIDER` |
-| Deployment | Railway (Nixpacks + `railway.toml`) |
+| Deployment | Render (live) · Railway (`railway.toml`, `nixpacks.toml`) |
 | Testing | Pytest |
 
 ---
@@ -34,7 +35,7 @@ Built as a take-home assignment demonstrating persistent agent memory, structure
 | **Human review escalation** | Low-confidence responses flagged via `flag_for_human`; queryable at `GET /flags` |
 | **GDPR memory deletion** | `DELETE /chat/{user_id}/memory` wipes all user data |
 | **OpenAPI documentation** | Swagger UI at `/docs`, ReDoc at `/redoc` |
-| **Railway deployment support** | `nixpacks.toml`, `Procfile`, `railway.toml`, health check on `/health` |
+| **Render / Railway deployment** | Live on [Render](https://sales-agent-d1vx.onrender.com); `runtime.txt`, `Procfile`, `railway.toml` |
 | **Memory compression** *(bonus)* | `MemoryService.maybe_compress()` summarises older messages when count exceeds threshold |
 
 All agent tools are **real Python functions** called from the agent loop — not simulated inside prompts.
@@ -318,7 +319,7 @@ sales-agent/
 │   ├── services/
 │   │   ├── eval_service.py       # EvalService — LLM self-evaluation → EvalBlock
 │   │   ├── memory_service.py     # MemoryService — persistence + compression
-│   │   └── llm/                  # Swappable LLM provider layer (Groq/OpenAI/Anthropic)
+│   │   └── llm/                  # Swappable LLM layer (factory, service, Groq/OpenAI/Anthropic providers)
 │   ├── models/
 │   │   └── schemas.py       # Pydantic request/response models
 │   ├── db/
@@ -329,8 +330,11 @@ sales-agent/
 │   └── main.py              # FastAPI app factory + lifespan
 ├── tests/
 │   └── test_agent.py        # Pytest test suite (14 tests)
+├── docs/
+│   └── screenshots/         # API endpoint screenshots (referenced in README)
 ├── .env.example
 ├── .gitignore
+├── runtime.txt              # Render Python 3.12.8 pin
 ├── nixpacks.toml            # Railway Python 3.12 pin
 ├── Procfile
 ├── railway.toml
@@ -369,6 +373,29 @@ Open http://localhost:8000/docs for Swagger UI.
 
 ---
 
+## Render Deployment (Live)
+
+**Production URL:** [https://sales-agent-d1vx.onrender.com](https://sales-agent-d1vx.onrender.com)
+
+| Setting | Value |
+|---------|--------|
+| **Build Command** | `pip install -r requirements.txt` |
+| **Start Command** | `uvicorn app.main:app --host 0.0.0.0 --port $PORT` |
+| **Python version** | `3.12.8` (via `runtime.txt`) |
+
+**Required environment variables:** `GROQ_API_KEY`, `LLM_PROVIDER=groq`, `MODEL_NAME=llama-3.3-70b-versatile` (see [Environment Variables](#environment-variables)).
+
+Quick smoke test:
+
+```bash
+curl -s https://sales-agent-d1vx.onrender.com/health | python -m json.tool
+curl -s https://sales-agent-d1vx.onrender.com/catalog | python -m json.tool
+```
+
+> **SQLite on Render:** The free tier uses ephemeral storage — the database resets on redeploy. For persistent memory, attach a [Render PostgreSQL](https://render.com/docs/databases) instance and set `DATABASE_URL` + `MEMORY_BACKEND=postgres`.
+
+---
+
 ## Railway Deployment
 
 ```bash
@@ -399,12 +426,12 @@ The `railway.toml` and `nixpacks.toml` files handle Python 3.12 and the uvicorn 
 
 ## Cross-Session Memory Demo (curl)
 
-Replace `https://your-app.up.railway.app` with your live URL (or use `http://localhost:8000` locally).
+Live demo against [https://sales-agent-d1vx.onrender.com](https://sales-agent-d1vx.onrender.com) (or use `http://localhost:8000` locally).
 
 ### Call 1 — Establish context (Session A)
 
 ```bash
-curl -s -X POST https://your-app.up.railway.app/chat/demo-user-001 \
+curl -s -X POST https://sales-agent-d1vx.onrender.com/chat/demo-user-001 \
   -H "Content-Type: application/json" \
   -H "X-Request-ID: demo-call-1" \
   -d '{"message": "What does your Enterprise plan include, and how much does it cost?"}' \
@@ -434,7 +461,7 @@ curl -s -X POST https://your-app.up.railway.app/chat/demo-user-001 \
 ### Call 2 — New session, uses prior context (Session B)
 
 ```bash
-curl -s -X POST https://your-app.up.railway.app/chat/demo-user-001 \
+curl -s -X POST https://sales-agent-d1vx.onrender.com/chat/demo-user-001 \
   -H "Content-Type: application/json" \
   -H "X-Request-ID: demo-call-2" \
   -d '{"message": "Does that include SSO? And what about data residency options?"}' \
@@ -446,7 +473,7 @@ The agent answers **without re-sending pricing context** because `get_user_memor
 ### Verify history spans both sessions
 
 ```bash
-curl -s https://your-app.up.railway.app/chat/demo-user-001/history \
+curl -s https://sales-agent-d1vx.onrender.com/chat/demo-user-001/history \
   | python -m json.tool
 ```
 
@@ -456,19 +483,19 @@ You will see messages from both session UUIDs under the same `user_id`.
 
 ```bash
 # Aggregated eval scores
-curl -s https://your-app.up.railway.app/chat/demo-user-001/evals | python -m json.tool
+curl -s https://sales-agent-d1vx.onrender.com/chat/demo-user-001/evals | python -m json.tool
 
 # Human-review flags
-curl -s https://your-app.up.railway.app/flags | python -m json.tool
+curl -s https://sales-agent-d1vx.onrender.com/flags | python -m json.tool
 
 # GDPR reset
-curl -s -X DELETE https://your-app.up.railway.app/chat/demo-user-001/memory | python -m json.tool
+curl -s -X DELETE https://sales-agent-d1vx.onrender.com/chat/demo-user-001/memory | python -m json.tool
 
 # Full catalog
-curl -s https://your-app.up.railway.app/catalog | python -m json.tool
+curl -s https://sales-agent-d1vx.onrender.com/catalog | python -m json.tool
 
 # Health check
-curl -s https://your-app.up.railway.app/health | python -m json.tool
+curl -s https://sales-agent-d1vx.onrender.com/health | python -m json.tool
 ```
 
 ---
@@ -596,15 +623,17 @@ pytest tests/ -v
 
 | Requirement | Status |
 |-------------|--------|
-| Railway config (`nixpacks.toml`, `railway.toml`, `Procfile`) | ✅ Ready |
+| **Live deployment** | ✅ [https://sales-agent-d1vx.onrender.com](https://sales-agent-d1vx.onrender.com) |
+| Render config (`runtime.txt`, `Procfile`) | ✅ Ready |
+| Railway config (`nixpacks.toml`, `railway.toml`) | ✅ Ready |
 | Health check endpoint | ✅ `/health` |
 | Environment variable documentation | ✅ `.env.example` |
 | OpenAPI docs | ✅ `/docs`, `/redoc` |
-| Persistent DB on Railway | ⚠️ Use PostgreSQL plugin (SQLite is ephemeral) |
+| Persistent DB on Render/Railway | ⚠️ Use PostgreSQL (SQLite is ephemeral) |
 | Live demo curl commands | ✅ Documented above |
 
 ---
 
 ## License
 
-MIT *(or your chosen license)*
+MIT 
